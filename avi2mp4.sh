@@ -7,8 +7,8 @@ CONFIG=~/conf/avi2mp4.conf
 LOG=~/log/avi2mp4.`date +%F`.log
 OVERWRITE=1
 FILE_LIST=''
-SOURCE_DIR='/tmp/mst3k/avi'
-DEST_DIR='/tmp/mst3k/'
+SOURCE_DIR='/storage/mst3k/avi'
+DEST_DIR='/storage/mst3k/'
 IFS_BAK="$IFS"
 
 # Encode video as h.264 which seems to be more efficient than mpeg4
@@ -109,7 +109,7 @@ if [ -z "$FILE_LIST" ]; then
 		log 'No files given on command line and no source directory set in config file.'
 		exit 1
 	fi
-	FILE_LIST="`find $SOURCE_DIR -maxdepth 1 -type f`"
+	FILE_LIST="`find $SOURCE_DIR -maxdepth 1 -type f | sort`"
 fi
 
 # Set field separator to newline so we can easily handle spaces in file names
@@ -124,6 +124,6 @@ for file in $FILE_LIST; do
 		continue
 	fi
 	log "Starting $file to $DEST_DIR/$new_name"
-	ffmpeg -y -v quiet -i "$file" $FFMPEG_OPTS "${DEST_DIR}${new_name}"
+	ffmpeg -y -v warning -i "$file" $FFMPEG_OPTS "${DEST_DIR}${new_name}"
 	log "Finished $file"
 done
